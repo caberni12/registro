@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Formulario de Registro</title>
+</head>
+<body>
+  <h1>Formulario de Registro</h1>
+
+  <!-- Formulario para enviar los datos -->
+  <form id="registroForm">
+    <label for="id">ID:</label>
+    <input type="text" id="id" name="id" required><br>
+
+    <label for="nombre">Nombre:</label>
+    <input type="text" id="nombre" name="nombre" required><br>
+
+    <label for="direccion">Dirección:</label>
+    <input type="text" id="direccion" name="direccion" required><br>
+
+    <label for="telefono">Teléfono:</label>
+    <input type="text" id="telefono" name="telefono" required><br>
+
+    <label for="observaciones">Observaciones:</label>
+    <textarea id="observaciones" name="observaciones" required></textarea><br>
+
+    <label for="total">Total:</label>
+    <input type="number" id="total" name="total" required><br>
+
+    <button type="submit">Enviar</button>
+  </form>
+
+  <!-- Script para enviar el formulario a Google Apps Script -->
+  <script>
+    document.getElementById("registroForm").addEventListener("submit", function(event) {
+      event.preventDefault(); // Evitar que se recargue la página al enviar el formulario
+
+      // Recoger los datos del formulario
+      var formData = new FormData(this);
+      var data = {};
+      formData.forEach(function(value, key) {
+        data[key] = value;
+      });
+
+      // URL del Google Apps Script
+      fetch("https://script.google.com/macros/s/AKfycbzcD8L19imSQEmQjCfJnSbFj0oUeJpeHP1vviUpGrNJcFQdP1iuaTPbIgiEqzbzoAj0qg/exec", {
+        method: "POST",
+        body: new URLSearchParams(data)
+      })
+      .then(response => response.json())
+      .then(responseData => {
+        if (responseData.result === "success") {
+          alert("Formulario enviado con éxito.");
+        } else {
+          alert("Hubo un error al enviar el formulario.");
+        }
+      })
+      .catch(error => {
+        alert("Error de conexión.");
+      });
+    });
+  </script>
+</body>
+</html>
