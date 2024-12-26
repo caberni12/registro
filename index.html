@@ -1,68 +1,54 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulario de Envío de Datos</title>
-    <script>
-        // Función para enviar el formulario a Google Apps Script
-        function enviarFormulario(event) {
-            event.preventDefault();  // Evita que el formulario se envíe de la manera tradicional
+<form id="formulario" onsubmit="enviarFormulario(event)">
+    <label for="nombre">Nombre:</label>
+    <input type="text" id="nombre" name="nombre" required><br><br>
 
-            // Obtiene los valores del formulario
-            var nombre = document.getElementById('nombre').value;
-            var direccion = document.getElementById('direccion').value;
-            var telefono = document.getElementById('telefono').value;
-            var observaciones = document.getElementById('observaciones').value;
-            var total = document.getElementById('total').value;
+    <label for="direccion">Dirección:</label>
+    <input type="text" id="direccion" name="direccion" required><br><br>
 
-            // Crea un objeto FormData con los datos del formulario
-            var formData = new FormData();
-            formData.append('nombre', nombre);
-            formData.append('direccion', direccion);
-            formData.append('telefono', telefono);
-            formData.append('observaciones', observaciones);
-            formData.append('total', total);
+    <label for="telefono">Teléfono:</label>
+    <input type="tel" id="telefono" name="telefono" required><br><br>
 
-            // URL de tu Google Apps Script Web App (reemplaza con tu URL real)
-            var url = 'https://script.google.com/macros/s/AKfycbzcD8L19imSQEmQjCfJnSbFj0oUeJpeHP1vviUpGrNJcFQdP1iuaTPbIgiEqzbzoAj0qg/exec';
+    <label for="observaciones">Observaciones:</label>
+    <textarea id="observaciones" name="observaciones" required></textarea><br><br>
 
-            // Envia los datos al Web App con fetch
-            fetch(url, {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())  // Si el servidor responde con JSON
-            .then(data => {
-                alert('Datos enviados correctamente');
-                console.log(data);  // Muestra la respuesta de Google Apps Script en la consola
-            })
-            .catch(error => {
-                alert('Hubo un error al enviar los datos');
-                console.error(error);
-            });
-        }
-    </script>
-</head>
-<body>
-    <h1>Formulario de Envío de Datos</h1>
-    <form id="formulario" onsubmit="enviarFormulario(event)">
-        <label for="nombre">Nombre:</label>
-        <input type="text" id="nombre" name="nombre" required><br><br>
+    <label for="total">Total:</label>
+    <input type="number" id="total" name="total" required><br><br>
 
-        <label for="direccion">Dirección:</label>
-        <input type="text" id="direccion" name="direccion" required><br><br>
+    <button type="submit">Enviar Datos</button>
+</form>
 
-        <label for="telefono">Teléfono:</label>
-        <input type="tel" id="telefono" name="telefono" required><br><br>
+<script>
+  // Función para manejar el envío de datos
+  function enviarFormulario(event) {
+    event.preventDefault(); // Prevenir el envío por defecto del formulario
 
-        <label for="observaciones">Observaciones:</label>
-        <textarea id="observaciones" name="observaciones" required></textarea><br><br>
+    // Crear un objeto FormData que recoja los datos del formulario
+    var formData = new FormData(document.getElementById('formulario'));
 
-        <label for="total">Total:</label>
-        <input type="number" id="total" name="total" required><br><br>
+    // Convertir FormData a un objeto regular para usarlo en la solicitud
+    var object = {};
+    formData.forEach(function(value, key) {
+      object[key] = value;
+    });
 
-        <button type="submit">Enviar Datos</button>
-    </form>
-</body>
-</html>
+    // Enviar la solicitud POST a la URL del Web App de Google Apps Script
+    var url = 'https://script.google.com/macros/s/AKfycbzcD8L19imSQEmQjCfJnSbFj0oUeJpeHP1vviUpGrNJcFQdP1iuaTPbIgiEqzbzoAj0qg/exec';
+    
+    fetch(url, {
+      method: 'POST',
+      body: JSON.stringify(object), // Enviar los datos como JSON
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Éxito:', data);
+      alert('Datos enviados con éxito');
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+      alert('Hubo un error al enviar los datos');
+    });
+  }
+</script>
