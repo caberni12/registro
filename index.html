@@ -1,66 +1,11 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulario de Registro</title>
-</head>
-<body>
-    <h1>Formulario de Registro</h1>
-    <form id="myForm">
-        <label for="name">Nombre:</label>
-        <input type="text" id="name" name="name" required><br><br>
+<form id="dataForm">
+  <label for="nombre">Nombre:</label>
+  <input type="text" id="nombre" name="nombre" required>
+  
 
-        <label for="address">Dirección:</label>
-        <input type="text" id="address" name="address" required><br><br>
-
-        <label for="phone">Teléfono:</label>
-        <input type="tel" id="phone" name="phone" required><br><br>
-
-        <label for="observations">Observaciones:</label>
-        <textarea id="observations" name="observations" required></textarea><br><br>
-
-        <label for="total">Total:</label>
-        <input type="number" id="total" name="total" required><br><br>
-
-        <button type="submit">Enviar</button>
-    </form>
-
-    <script>
-        document.getElementById('myForm').addEventListener('submit', function(e) {
-            e.preventDefault(); // Prevenir la acción predeterminada del formulario
-
-            const formData = new FormData(this);
-            const data = {};
-            formData.forEach((value, key) => {
-                data[key] = value;
-            });
-
-            // URL del Google Apps Script
-            fetch('https://script.google.com/macros/s/AKfycbzcD8L19imSQEmQjCfJnSbFj0oUeJpeHP1vviUpGrNJcFQdP1iuaTPbIgiEqzbzoAj0qg/exec', {
-                method: 'POST',
-                body: JSON.stringify(data),
-                headers: {
-                    'Content-Type': 'application/json',
-                }
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Error en la respuesta del servidor');
-                }
-                return response.json();
-            })
-            .then(result => {
-                if (result.result === 'success') {
-                    alert("Datos enviados con éxito");
-                } else {
-                    alert(`Error: ${result.message}`);
-                }
-            })
-            .catch(error => {
-                alert(`Hubo un error al enviar los datos: ${error.message}`);
-            });
-        });
-    </script>
-</body>
-</html>
+<label for="email">Correo electrónico:</label>
+  
+  
+<input type="email" id="email" name="email" required>
+  <input type="submit" value="Enviar">
+</form>
